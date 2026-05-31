@@ -1,0 +1,19 @@
+# CCTV Videos and Archives (Required by Challenge Rules)
+*.zip
+*.mp4
+CCTV Footage/
+CCTV_Footage/
+store-intelligence/pipeline/CCTV_Footage/
+CCTV_Footage_Temp/
+CCTV_Footage_Temp_Frames/
+
+# Local databases and caches
+*.db
+store-intelligence/app/store_intelligence.db
+.pytest_cache/
+__pycache__/
+*.pyc
+
+# OS & VS Code files
+.DS_Store
+.vscode/

@@ -1,0 +1,15 @@
+version: "3.8"
+
+services:
+  api:
+    build:
+      context: ./store-intelligence
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount the POS CSV from the host into the container so it seeds automatically
+      - "./Brigade_Bangalore_10_April_26 (1)bc6219c.csv:/app/Brigade_Bangalore_10_April_26 (1)bc6219c.csv"
+    environment:
+      - PORT=8000
+    restart: always

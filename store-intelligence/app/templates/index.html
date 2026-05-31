@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apex Store Intelligence - Live Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0b0b0f;
+            --card-bg: rgba(20, 20, 28, 0.45);
+            --card-border: rgba(255, 255, 255, 0.08);
+            --neon-purple: #bb66ff;
+            --neon-pink: #ff4df0;
+            --neon-green: #39ff14;
+            --neon-orange: #ff7e15;
+            --neon-blue: #00d2ff;
+            --text-main: #f5f5f7;
+            --text-muted: #8e8e93;
+            --font-main: 'Outfit', sans-serif;
+            --font-mono: 'Space Grotesk', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(187, 102, 255, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(255, 77, 240, 0.08) 0%, transparent 40%);
+            color: var(--text-main);
+            font-family: var(--font-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            padding: 24px;
+        }
+
+        /* Glassmorphism utility */
+        .glass {
+            background: var(--card-bg);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--card-border);
+            border-radius: 16px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        .glass:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            padding: 20px;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 20px;
+            box-shadow: 0 0 15px rgba(187, 102, 255, 0.4);
+            font-family: var(--font-mono);
+        }
+
+        .logo-title h1 {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            background: linear-gradient(to right, #ffffff, #d8b4fe);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .logo-title p {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .feed-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 13px;
+            font-family: var(--font-mono);
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background-color: var(--neon-green);
+            box-shadow: 0 0 10px var(--neon-green);
+            animation: pulse 1.5s infinite;
+        }
+
+        .status-dot.stale {
+            background-color: var(--neon-orange);
+            box-shadow: 0 0 10px var(--neon-orange);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.3); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .store-selector {
+            display: flex;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .store-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            padding: 8px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .store-btn.active {
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-main);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        /* Metrics grid */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .metric-card {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .metric-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+        }
+
+        .metric-card.visitors::before { background: var(--neon-purple); }
+        .metric-card.conversion::before { background: var(--neon-green); }
+        .metric-card.queue::before { background: var(--neon-orange); }
+        .metric-card.abandonment::before { background: var(--neon-blue); }
+
+        .metric-info h3 {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+
+        .metric-value {
+            font-size: 32px;
+            font-weight: 800;
+            font-family: var(--font-mono);
+            letter-spacing: -1px;
+        }
+
+        .metric-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .metric-card.visitors .metric-icon { background: rgba(187, 102, 255, 0.1); color: var(--neon-purple); }
+        .metric-card.conversion .metric-icon { background: rgba(57, 255, 20, 0.1); color: var(--neon-green); }
+        .metric-card.queue .metric-icon { background: rgba(255, 126, 21, 0.1); color: var(--neon-orange); }
+        .metric-card.abandonment .metric-icon { background: rgba(0, 210, 253, 0.1); color: var(--neon-blue); }
+
+        /* Main Workspace Grid */
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: 3fr 2fr;
+            gap: 24px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .workspace-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .section-title span.badge {
+            font-size: 10px;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+        }
+
+        /* Layout Heatmap card */
+        .layout-card {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 520px;
+        }
+
+        .layout-container {
+            flex-grow: 1;
+            position: relative;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .layout-image {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            opacity: 0.45;
+        }
+
+        /* Heat Overlay Elements */
+        .heat-overlay {
+            position: absolute;
+            background: radial-gradient(circle, rgba(187, 102, 255, 0.5) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            transition: all 0.5s;
+            mix-blend-mode: screen;
+        }
+
+        .heat-label {
+            position: absolute;
+            background: rgba(11, 11, 15, 0.85);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 9px;
+            font-family: var(--font-mono);
+            font-weight: bold;
+            color: #fff;
+            pointer-events: auto;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        /* Funnel Card */
+        .funnel-card {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            height: 520px;
+        }
+
+        .funnel-container {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            padding: 10px 0;
+        }
+
+        .funnel-bar-container {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .funnel-label {
+            width: 100px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .funnel-progress-box {
+            flex-grow: 1;
+            background: rgba(255, 255, 255, 0.02);
+            height: 36px;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+
+        .funnel-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, rgba(187, 102, 255, 0.3) 0%, rgba(255, 77, 240, 0.6) 100%);
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(255, 77, 240, 0.2);
+        }
+
+        .funnel-stats {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-family: var(--font-mono);
+            font-size: 12px;
+            font-weight: bold;
+            display: flex;
+            gap: 16px;
+        }
+
+        .funnel-pct {
+            color: var(--neon-pink);
+        }
+
+        .funnel-count {
+            color: #fff;
+        }
+
+        .funnel-dropoff-tag {
+            position: absolute;
+            bottom: -22px;
+            left: 100px;
+            font-size: 10px;
+            color: var(--neon-orange);
+            font-family: var(--font-mono);
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Bottom Row Grid */
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .bottom-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .anomalies-card {
+            padding: 20px;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .anomalies-list {
+            flex-grow: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding-right: 4px;
+        }
+
+        .anomaly-item {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.01);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            position: relative;
+        }
+
+        .anomaly-item.critical { border-left: 4px solid var(--neon-pink); background: rgba(255, 77, 240, 0.02); }
+        .anomaly-item.warn { border-left: 4px solid var(--neon-orange); background: rgba(255, 126, 21, 0.02); }
+        .anomaly-item.info { border-left: 4px solid var(--neon-blue); background: rgba(0, 210, 253, 0.02); }
+
+        .anomaly-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .anomaly-badge {
+            font-size: 9px;
+            font-family: var(--font-mono);
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        .anomaly-item.critical .anomaly-badge { background: rgba(255, 77, 240, 0.15); color: var(--neon-pink); }
+        .anomaly-item.warn .anomaly-badge { background: rgba(255, 126, 21, 0.15); color: var(--neon-orange); }
+        .anomaly-item.info .anomaly-badge { background: rgba(0, 210, 253, 0.15); color: var(--neon-blue); }
+
+        .anomaly-time {
+            font-size: 10px;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+
+        .anomaly-details {
+            font-size: 13px;
+            color: var(--text-main);
+            margin: 4px 0;
+        }
+
+        .anomaly-action {
+            font-size: 12px;
+            color: var(--neon-green);
+            font-weight: 500;
+        }
+
+        /* Control Panel Card */
+        .controls-card {
+            padding: 20px;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .controls-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            flex-grow: 1;
+            gap: 16px;
+            text-align: center;
+        }
+
+        .btn-action {
+            background: linear-gradient(135deg, var(--neon-purple) 0%, var(--neon-pink) 100%);
+            border: none;
+            color: #fff;
+            padding: 14px 28px;
+            border-radius: 8px;
+            font-weight: bold;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 0 15px rgba(187, 102, 255, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(255, 77, 240, 0.5);
+        }
+
+        .btn-action:active {
+            transform: translateY(0);
+        }
+
+        .btn-action.running {
+            background: rgba(255,255,255,0.06);
+            color: var(--text-muted);
+            box-shadow: none;
+            cursor: not-allowed;
+            pointer-events: none;
+        }
+
+        .control-status-log {
+            width: 100%;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+            height: 120px;
+            padding: 10px;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--neon-green);
+            overflow-y: auto;
+            text-align: left;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+
+        /* Scrollbar styles */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255,255,255,0.2);
+        }
+    </style>
+</head>
+<body>
+
+    <header class="glass">
+        <div class="logo-area">
+            <div class="logo-icon">💄</div>
+            <div class="logo-title">
+                <h1>APEX RETAIL</h1>
+                <p>Store Intelligence Platform</p>
+            </div>
+        </div>
+        <div class="header-controls">
+            <div class="feed-status">
+                <div class="status-dot" id="status-dot"></div>
+                <span id="status-text">LIVE REPLAY CONNECTED</span>
+            </div>
+            <div class="store-selector">
+                <button class="store-btn active" onclick="switchStore('STORE_BLR_002')">STORE_BLR_002</button>
+                <button class="store-btn" onclick="switchStore('ST1008')">ST1008</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Metrics row -->
+    <div class="metrics-grid">
+        <div class="metric-card glass visitors">
+            <div class="metric-info">
+                <h3>Unique Visitors</h3>
+                <div class="metric-value" id="val-visitors">0</div>
+            </div>
+            <div class="metric-icon">👥</div>
+        </div>
+        <div class="metric-card glass conversion">
+            <div class="metric-info">
+                <h3>Conversion Rate</h3>
+                <div class="metric-value" id="val-conversion">0.0%</div>
+            </div>
+            <div class="metric-icon">📈</div>
+        </div>
+        <div class="metric-card glass queue">
+            <div class="metric-info">
+                <h3>Billing Queue Depth</h3>
+                <div class="metric-value" id="val-queue">0</div>
+            </div>
+            <div class="metric-icon">🚶‍♂️</div>
+        </div>
+        <div class="metric-card glass abandonment">
+            <div class="metric-info">
+                <h3>Abandonment Rate</h3>
+                <div class="metric-value" id="val-abandonment">0.0%</div>
+            </div>
+            <div class="metric-icon">⚠️</div>
+        </div>
+    </div>
+
+    <!-- Workspace Grid -->
+    <div class="workspace-grid">
+        <!-- Store Layout Heatmap -->
+        <div class="layout-card glass">
+            <div class="section-header">
+                <div class="section-title">
+                    📍 Real-Time Zone Activity Heatmap <span class="badge" id="confidence-badge">High Conf</span>
+                </div>
+            </div>
+            <div class="layout-container" id="layout-container">
+                <!-- Fallback background layout illustration using CSS borders and grids -->
+                <div style="width: 100%; height: 100%; position: relative; padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
+                    
+                    <!-- Top shelfs row -->
+                    <div style="display: flex; justify-content: space-between; width: 100%; height: 60px;">
+                        <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">EB Korean</div>
+                        <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">The Face Shop</div>
+                        <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Good Vibes</div>
+                        <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">DermDoc</div>
+                        <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Minimalist</div>
+                        <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Aqualogica</div>
+                        <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Lakme Skin</div>
+                        <div style="border: 1px solid var(--neon-blue); background: rgba(0, 210, 253, 0.05); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Accessories</div>
+                    </div>
+                    
+                    <!-- Center gondolas -->
+                    <div style="display: flex; justify-content: space-around; width: 100%; align-items: center; flex-grow: 1; padding: 20px 0;">
+                        <!-- Entrance glass on left -->
+                        <div style="border: 2px solid rgba(255,255,255,0.1); width: 15px; height: 100px; display: flex; align-items: center; justify-content: center; font-size: 9px; font-family: var(--font-mono); transform: rotate(-90deg); margin-left: -10px;">ENTRY</div>
+                        
+                        <div style="border: 1px dashed var(--neon-pink); width: 15%; height: 80px; padding: 6px; font-size: 10px; text-align: center; display: flex; flex-direction: column; justify-content: center; border-radius: 4px;">
+                            <span>Fragrance</span>
+                            <span style="font-size: 7px; color: var(--text-muted);">Nail Unit</span>
+                        </div>
+                        
+                        <div style="font-family: var(--font-mono); font-weight: bold; font-size: 36px; opacity: 0.1; letter-spacing: 5px;">F.O.H</div>
+                        
+                        <div style="border: 1px dashed var(--neon-pink); width: 15%; height: 80px; padding: 6px; font-size: 10px; text-align: center; display: flex; flex-direction: column; justify-content: center; border-radius: 4px;">
+                            <span>Makeup</span>
+                            <span style="font-size: 7px; color: var(--text-muted);">Unit G-1</span>
+                        </div>
+                        
+                        <!-- Cash counter on right -->
+                        <div style="border: 2px solid var(--neon-orange); background: rgba(255, 126, 21, 0.05); width: 15%; height: 120px; padding: 6px; font-size: 10px; text-align: center; display: flex; flex-direction: column; justify-content: center; border-radius: 6px; box-shadow: 0 0 10px rgba(255, 126, 21, 0.1);">
+                            <span style="font-weight: bold;">CASH</span>
+                            <span>COUNTER</span>
+                            <span style="font-size: 8px; color: var(--neon-orange); margin-top: 4px;" id="map-queue-label">Q: 0</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Bottom shelfs row -->
+                    <div style="display: flex; justify-content: space-between; width: 100%; height: 60px;">
+                        <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Maybelline</div>
+                        <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Faces Canada</div>
+                        <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Lakme</div>
+                        <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Colorbar</div>
+                        <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Swiss Beauty</div>
+                        <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Renee NY</div>
+                        <div style="border: 1px solid var(--neon-green); background: rgba(57, 255, 20, 0.03); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Alps Goodness</div>
+                        <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Streax</div>
+                    </div>
+                </div>
+                
+                <!-- Dynamic heat elements will be rendered by JS -->
+                <div id="dynamic-heats"></div>
+            </div>
+        </div>
+
+        <!-- Conversion Funnel -->
+        <div class="funnel-card glass">
+            <div class="section-header">
+                <div class="section-title">
+                    ⚡ Customer Conversion Funnel <span class="badge">Session Unit</span>
+                </div>
+            </div>
+            <div class="funnel-container">
+                <!-- Funnel stage 1 -->
+                <div class="funnel-bar-container">
+                    <div class="funnel-label">1. Entry</div>
+                    <div class="funnel-progress-box">
+                        <div class="funnel-progress-fill" id="funnel-fill-1" style="width: 0%;"></div>
+                        <div class="funnel-stats">
+                            <span class="funnel-pct" id="funnel-pct-1">0%</span>
+                            <span class="funnel-count" id="funnel-count-1">0 visitors</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Funnel stage 2 -->
+                <div class="funnel-bar-container">
+                    <div class="funnel-label">2. Zone Visit</div>
+                    <div class="funnel-progress-box">
+                        <div class="funnel-progress-fill" id="funnel-fill-2" style="width: 0%;"></div>
+                        <div class="funnel-stats">
+                            <span class="funnel-pct" id="funnel-pct-2">0%</span>
+                            <span class="funnel-count" id="funnel-count-2">0 visitors</span>
+                        </div>
+                    </div>
+                    <div class="funnel-dropoff-tag" id="funnel-drop-2">⬇ 0% drop-off</div>
+                </div>
+                <!-- Funnel stage 3 -->
+                <div class="funnel-bar-container">
+                    <div class="funnel-label">3. Billing Queue</div>
+                    <div class="funnel-progress-box">
+                        <div class="funnel-progress-fill" id="funnel-fill-3" style="width: 0%;"></div>
+                        <div class="funnel-stats">
+                            <span class="funnel-pct" id="funnel-pct-3">0%</span>
+                            <span class="funnel-count" id="funnel-count-3">0 visitors</span>
+                        </div>
+                    </div>
+                    <div class="funnel-dropoff-tag" id="funnel-drop-3">⬇ 0% drop-off</div>
+                </div>
+                <!-- Funnel stage 4 -->
+                <div class="funnel-bar-container">
+                    <div class="funnel-label">4. Purchase</div>
+                    <div class="funnel-progress-box">
+                        <div class="funnel-progress-fill" id="funnel-fill-4" style="width: 0%;"></div>
+                        <div class="funnel-stats">
+                            <span class="funnel-pct" id="funnel-pct-4">0%</span>
+                            <span class="funnel-count" id="funnel-count-4">0 buyers</span>
+                        </div>
+                    </div>
+                    <div class="funnel-dropoff-tag" id="funnel-drop-4">⬇ 0% drop-off</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Row -->
+    <div class="bottom-grid">
+        <!-- Active Operational Anomalies -->
+        <div class="anomalies-card glass">
+            <div class="section-header">
+                <div class="section-title">
+                    🚨 Active Operational Alerts <span class="badge" style="background: rgba(255, 77, 240, 0.1); color: var(--neon-pink);" id="anomaly-badge-count">0 Active</span>
+                </div>
+            </div>
+            <div class="anomalies-list" id="anomalies-list">
+                <div style="text-align: center; color: var(--text-muted); font-size: 13px; padding-top: 40px;">No operational anomalies active. Store running in optimal state.</div>
+            </div>
+        </div>
+
+        <!-- Simulated Feed Control Center -->
+        <div class="controls-card glass">
+            <div class="section-header">
+                <div class="section-title">
+                    ⚙️ Store Intelligence Control Center
+                </div>
+            </div>
+            <div class="controls-content">
+                <p style="font-size: 13px; color: var(--text-muted); max-width: 80%;">
+                    Test the complete integrated pipeline (from CV event emission to API ingestion to live metrics rendering) using our pre-calibrated CCTV Event Replay:
+                </p>
+                <button class="btn-action" id="btn-replay" onclick="triggerSimulatedReplay()">
+                    🚀 RUN LIVE PIPELINE REPLAY
+                </button>
+                <div class="control-status-log" id="status-log">
+                    [System] Ready. Click the button above to simulate real-time camera feed events.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStoreId = "STORE_BLR_002";
+        let isReplayRunning = false;
+
+        // Coordinates for layout positioning (relative percentages inside the layout-container)
+        const zonePositions = {
+            "EB Korean": { left: '10%', top: '15%', color: 'var(--neon-purple)' },
+            "The Face Shop": { left: '22%', top: '15%', color: 'var(--neon-purple)' },
+            "Good Vibes": { left: '34%', top: '15%', color: 'var(--neon-purple)' },
+            "DermDoc": { left: '46%', top: '15%', color: 'var(--neon-purple)' },
+            "Minimalist": { left: '58%', top: '15%', color: 'var(--neon-purple)' },
+            "Aqualogica": { left: '70%', top: '15%', color: 'var(--neon-purple)' },
+            "Lakme Skin": { left: '82%', top: '15%', color: 'var(--neon-purple)' },
+            "Accessories": { left: '92%', top: '15%', color: 'var(--neon-blue)' },
+            
+            "Fragrance": { left: '30%', top: '50%', color: 'var(--neon-pink)' },
+            "Nail Unit": { left: '30%', top: '55%', color: 'var(--neon-pink)' },
+            "Makeup Unit": { left: '68%', top: '50%', color: 'var(--neon-pink)' },
+            
+            "CASH COUNTER": { left: '90%', top: '55%', color: 'var(--neon-orange)' },
+            "Billing Zone": { left: '90%', top: '55%', color: 'var(--neon-orange)' },
+            "Billing": { left: '90%', top: '55%', color: 'var(--neon-orange)' },
+            
+            "Maybelline": { left: '10%', top: '85%', color: 'var(--neon-purple)' },
+            "Faces Canada": { left: '22%', top: '85%', color: 'var(--neon-purple)' },
+            "Lakme": { left: '34%', top: '85%', color: 'var(--neon-purple)' },
+            "Colorbar + Sugar": { left: '46%', top: '85%', color: 'var(--neon-purple)' },
+            "Swiss Beauty": { left: '58%', top: '85%', color: 'var(--neon-purple)' },
+            "Renee NY Bae": { left: '70%', top: '85%', color: 'var(--neon-purple)' },
+            "Alps Goodness": { left: '82%', top: '85%', color: 'var(--neon-green)' },
+            "Streax": { left: '92%', top: '85%', color: 'var(--neon-purple)' }
+        };
+
+        function switchStore(storeId) {
+            currentStoreId = storeId;
+            document.querySelectorAll('.store-btn').forEach(btn => {
+                if (btn.innerText === storeId) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+            fetchData();
+        }
+
+        async function fetchData() {
+            try {
+                // Fetch metrics
+                const resMetrics = await fetch(`/stores/${currentStoreId}/metrics`);
+                if (resMetrics.ok) {
+                    const metrics = await resMetrics.json();
+                    document.getElementById('val-visitors').innerText = metrics.unique_visitors;
+                    document.getElementById('val-conversion').innerText = `${(metrics.conversion_rate * 100).toFixed(1)}%`;
+                    document.getElementById('val-queue').innerText = metrics.queue_depth;
+                    document.getElementById('map-queue-label').innerText = `Q: ${metrics.queue_depth}`;
+                    document.getElementById('val-abandonment').innerText = `${(metrics.abandonment_rate * 100).toFixed(1)}%`;
+                }
+
+                // Fetch funnel
+                const resFunnel = await fetch(`/stores/${currentStoreId}/funnel`);
+                if (resFunnel.ok) {
+                    const data = await resFunnel.json();
+                    const funnel = data.funnel;
+                    
+                    // Funnel stage 1 (Entry)
+                    document.getElementById('funnel-fill-1').style.width = `${funnel[0].conversion_pct}%`;
+                    document.getElementById('funnel-pct-1').innerText = `${funnel[0].conversion_pct}%`;
+                    document.getElementById('funnel-count-1').innerText = `${funnel[0].visitor_count} visitors`;
+
+                    // Funnel stage 2 (Zone Visit)
+                    document.getElementById('funnel-fill-2').style.width = `${funnel[1].conversion_pct}%`;
+                    document.getElementById('funnel-pct-2').innerText = `${funnel[1].conversion_pct}%`;
+                    document.getElementById('funnel-count-2').innerText = `${funnel[1].visitor_count} visitors`;
+                    document.getElementById('funnel-drop-2').innerText = `⬇ ${funnel[1].drop_off_pct}% drop-off`;
+
+                    // Funnel stage 3 (Billing Queue)
+                    document.getElementById('funnel-fill-3').style.width = `${funnel[2].conversion_pct}%`;
+                    document.getElementById('funnel-pct-3').innerText = `${funnel[2].conversion_pct}%`;
+                    document.getElementById('funnel-count-3').innerText = `${funnel[2].visitor_count} visitors`;
+                    document.getElementById('funnel-drop-3').innerText = `⬇ ${funnel[2].drop_off_pct}% drop-off`;
+
+                    // Funnel stage 4 (Purchase)
+                    document.getElementById('funnel-fill-4').style.width = `${funnel[3].conversion_pct}%`;
+                    document.getElementById('funnel-pct-4').innerText = `${funnel[3].conversion_pct}%`;
+                    document.getElementById('funnel-count-4').innerText = `${funnel[3].visitor_count} buyers`;
+                    document.getElementById('funnel-drop-4').innerText = `⬇ ${funnel[3].drop_off_pct}% drop-off`;
+                }
+
+                // Fetch heatmap
+                const resHeatmap = await fetch(`/stores/${currentStoreId}/heatmap`);
+                if (resHeatmap.ok) {
+                    const data = await resHeatmap.json();
+                    const cells = data.heatmap;
+                    
+                    // Render heat overlays dynamically
+                    const heatsContainer = document.getElementById('dynamic-heats');
+                    heatsContainer.innerHTML = '';
+                    
+                    const badge = document.getElementById('confidence-badge');
+                    if (data.data_confidence) {
+                        badge.innerText = "High Conf";
+                        badge.style.background = "rgba(57, 255, 20, 0.1)";
+                        badge.style.color = "var(--neon-green)";
+                    } else {
+                        badge.innerText = "Low Conf (<20 sessions)";
+                        badge.style.background = "rgba(255, 126, 21, 0.1)";
+                        badge.style.color = "var(--neon-orange)";
+                    }
+
+                    cells.forEach(cell => {
+                        const zone = cell.zone_id;
+                        const pos = zonePositions[zone];
+                        if (pos) {
+                            // Heat overlay size scales with frequency
+                            const size = 30 + (cell.normalized_score * 0.7);
+                            const opacity = 0.1 + (cell.normalized_score * 0.005);
+                            
+                            // Radial gradient color matching zone character
+                            const overlay = document.createElement('div');
+                            overlay.className = 'heat-overlay';
+                            overlay.style.width = `${size}px`;
+                            overlay.style.height = `${size}px`;
+                            overlay.style.left = `calc(${pos.left} - ${size/2}px)`;
+                            overlay.style.top = `calc(${pos.top} - ${size/2}px)`;
+                            overlay.style.background = `radial-gradient(circle, ${pos.color} ${opacity * 100}%, transparent 70%)`;
+                            heatsContainer.appendChild(overlay);
+
+                            // Bounding overlay text label
+                            const label = document.createElement('div');
+                            label.className = 'heat-label';
+                            label.style.left = pos.left;
+                            label.style.top = pos.top;
+                            label.innerHTML = `${zone}<br><span style="color:${pos.color}">Vis: ${cell.visit_frequency}</span>`;
+                            heatsContainer.appendChild(label);
+                        }
+                    });
+                }
+
+                // Fetch anomalies
+                const resAnomalies = await fetch(`/stores/${currentStoreId}/anomalies`);
+                if (resAnomalies.ok) {
+                    const data = await resAnomalies.json();
+                    const list = data.anomalies;
+                    const listContainer = document.getElementById('anomalies-list');
+                    const badge = document.getElementById('anomaly-badge-count');
+                    
+                    badge.innerText = `${list.length} Active`;
+                    if (list.length > 0) {
+                        listContainer.innerHTML = '';
+                        list.forEach(an => {
+                            const item = document.createElement('div');
+                            item.className = `anomaly-item ${an.severity.toLowerCase()}`;
+                            item.innerHTML = `
+                                <div class="anomaly-header">
+                                    <span class="anomaly-badge">${an.anomaly_type}</span>
+                                    <span class="anomaly-time">${an.timestamp.substring(11, 19)} UTC</span>
+                                </div>
+                                <div class="anomaly-details">${an.details}</div>
+                                <div class="anomaly-action">⚡ Action: ${an.suggested_action}</div>
+                            `;
+                            listContainer.appendChild(item);
+                        });
+                    } else {
+                        listContainer.innerHTML = `
+                            <div style="text-align: center; color: var(--text-muted); font-size: 13px; padding-top: 40px;">No operational anomalies active. Store running in optimal state.</div>
+                        `;
+                    }
+                }
+
+            } catch (e) {
+                console.error("Error fetching live dashboard metrics:", e);
+            }
+        }
+
+        // Trigger simulated live feed events pushing
+        async function triggerSimulatedReplay() {
+            if (isReplayRunning) return;
+            isReplayRunning = true;
+            
+            const btn = document.getElementById('btn-replay');
+            btn.classList.add('running');
+            btn.innerText = "⏳ REPLAY RUNNING (SIMULATING CCTV EVENTS)...";
+            
+            const logBox = document.getElementById('status-log');
+            logBox.innerText = "[System] Initializing camera streams (CAM 1 to CAM 5)...";
+            
+            // Build sample event list tracking customer sessions in the store
+            const sampleEvents = [
+                // Session 1 (Customer A: VIS_a81f3)
+                { "event_id": "e001", "store_id": currentStoreId, "camera_id": "CAM_3", "visitor_id": "VIS_a81f3", "event_type": "ENTRY", "timestamp": "2026-04-10T20:10:00Z", "dwell_ms": 0, "is_staff": false, "confidence": 0.98 },
+                { "event_id": "e002", "store_id": currentStoreId, "camera_id": "CAM_1", "visitor_id": "VIS_a81f3", "event_type": "ZONE_ENTER", "timestamp": "2026-04-10T20:10:10Z", "zone_id": "The Face Shop", "dwell_ms": 0, "is_staff": false, "confidence": 0.94 },
+                { "event_id": "e003", "store_id": currentStoreId, "camera_id": "CAM_1", "visitor_id": "VIS_a81f3", "event_type": "ZONE_DWELL", "timestamp": "2026-04-10T20:10:40Z", "zone_id": "The Face Shop", "dwell_ms": 30000, "is_staff": false, "confidence": 0.92 },
+                
+                // Session 2 (Customer B: VIS_b34c2) - Group Entry with Customer A
+                { "event_id": "e004", "store_id": currentStoreId, "camera_id": "CAM_3", "visitor_id": "VIS_b34c2", "event_type": "ENTRY", "timestamp": "2026-04-10T20:10:02Z", "dwell_ms": 0, "is_staff": false, "confidence": 0.95 },
+                { "event_id": "e005", "store_id": currentStoreId, "camera_id": "CAM_2", "visitor_id": "VIS_b34c2", "event_type": "ZONE_ENTER", "timestamp": "2026-04-10T20:10:20Z", "zone_id": "Maybelline", "dwell_ms": 0, "is_staff": false, "confidence": 0.91 },
+                
+                // Staff Movement (CL2063: is_staff=true)
+                { "event_id": "e006", "store_id": currentStoreId, "camera_id": "CAM_1", "visitor_id": "STAFF_CL2063", "event_type": "ZONE_ENTER", "timestamp": "2026-04-10T20:10:30Z", "zone_id": "Good Vibes", "dwell_ms": 0, "is_staff": true, "confidence": 0.99 },
+                
+                // Session 1 goes to Cash Counter
+                { "event_id": "e007", "store_id": currentStoreId, "camera_id": "CAM_5", "visitor_id": "VIS_a81f3", "event_type": "ZONE_ENTER", "timestamp": "2026-04-10T20:11:00Z", "zone_id": "CASH COUNTER", "dwell_ms": 0, "is_staff": false, "confidence": 0.96 },
+                { "event_id": "e008", "store_id": currentStoreId, "camera_id": "CAM_5", "visitor_id": "VIS_a81f3", "event_type": "BILLING_QUEUE_JOIN", "timestamp": "2026-04-10T20:11:05Z", "zone_id": "CASH COUNTER", "dwell_ms": 0, "is_staff": false, "confidence": 0.95, "metadata": { "queue_depth": 1 } },
+                
+                // POS transaction in CSV is mapped to 2026-04-10T20:11:15Z to trigger conversion
+                // (Our API seeds 101 transactions. During replay, we'll post this batch of events, 
+                // and since there are transactions near this window, VIS_a81f3 will converted!)
+                
+                // Session 2 goes to Alps Goodness
+                { "event_id": "e009", "store_id": currentStoreId, "camera_id": "CAM_2", "visitor_id": "VIS_b34c2", "event_type": "ZONE_ENTER", "timestamp": "2026-04-10T20:11:10Z", "zone_id": "Alps Goodness", "dwell_ms": 0, "is_staff": false, "confidence": 0.93 },
+                { "event_id": "e010", "store_id": currentStoreId, "camera_id": "CAM_2", "visitor_id": "VIS_b34c2", "event_type": "ZONE_DWELL", "timestamp": "2026-04-10T20:11:40Z", "zone_id": "Alps Goodness", "dwell_ms": 30000, "is_staff": false, "confidence": 0.90 },
+                
+                // Session 1 Exits after purchase
+                { "event_id": "e011", "store_id": currentStoreId, "camera_id": "CAM_3", "visitor_id": "VIS_a81f3", "event_type": "EXIT", "timestamp": "2026-04-10T20:11:55Z", "dwell_ms": 115000, "is_staff": false, "confidence": 0.98 },
+                
+                // Session 3 (Customer C: VIS_c90d4) - Re-entry visitor who steps out and returns
+                { "event_id": "e012", "store_id": currentStoreId, "camera_id": "CAM_3", "visitor_id": "VIS_c90d4", "event_type": "ENTRY", "timestamp": "2026-04-10T20:05:00Z", "dwell_ms": 0, "is_staff": false, "confidence": 0.97 },
+                { "event_id": "e013", "store_id": currentStoreId, "camera_id": "CAM_3", "visitor_id": "VIS_c90d4", "event_type": "EXIT", "timestamp": "2026-04-10T20:07:00Z", "dwell_ms": 120000, "is_staff": false, "confidence": 0.97 },
+                { "event_id": "e014", "store_id": currentStoreId, "camera_id": "CAM_3", "visitor_id": "VIS_c90d4", "event_type": "REENTRY", "timestamp": "2026-04-10T20:11:15Z", "dwell_ms": 0, "is_staff": false, "confidence": 0.95 },
+                
+                // Session 4 (Customer D: VIS_d77f9) - Joins queue and Abandons
+                { "event_id": "e015", "store_id": currentStoreId, "camera_id": "CAM_3", "visitor_id": "VIS_d77f9", "event_type": "ENTRY", "timestamp": "2026-04-10T20:11:00Z", "dwell_ms": 0, "is_staff": false, "confidence": 0.96 },
+                { "event_id": "e016", "store_id": currentStoreId, "camera_id": "CAM_5", "visitor_id": "VIS_d77f9", "event_type": "BILLING_QUEUE_JOIN", "timestamp": "2026-04-10T20:11:20Z", "zone_id": "CASH COUNTER", "dwell_ms": 0, "is_staff": false, "confidence": 0.94, "metadata": { "queue_depth": 2 } },
+                { "event_id": "e017", "store_id": currentStoreId, "camera_id": "CAM_5", "visitor_id": "VIS_d77f9", "event_type": "BILLING_QUEUE_ABANDON", "timestamp": "2026-04-10T20:11:45Z", "zone_id": "CASH COUNTER", "dwell_ms": 25000, "is_staff": false, "confidence": 0.92 }
+            ];
+
+            // Ingest events in small batches of 3 every 1 second to simulate real-time processing
+            const batchSize = 3;
+            for (let i = 0; i < sampleEvents.length; i += batchSize) {
+                const batch = sampleEvents.slice(i, i + batchSize);
+                try {
+                    const res = await fetch('/events/ingest', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(batch)
+                    });
+                    if (res.ok) {
+                        const r = await res.json();
+                        logBox.innerText += `\n[Ingestion] Sent ${batch.length} events (processed: ${r.processed_count}, failed: ${r.failed_count})`;
+                        logBox.scrollTop = logBox.scrollHeight;
+                        
+                        // Fetch latest data to update dashboard in real-time
+                        await fetchData();
+                    }
+                } catch (e) {
+                    logBox.innerText += `\n[Error] Connection failed: ${e.message}`;
+                }
+                // Wait 1.5 seconds before next batch
+                await new Promise(r => setTimeout(r, 1500));
+            }
+            
+            // Replay Finished
+            logBox.innerText += "\n[System] Live Event Replay complete. Pipeline in optimal state.";
+            logBox.scrollTop = logBox.scrollHeight;
+            isReplayRunning = false;
+            btn.classList.remove('running');
+            btn.innerText = "🚀 RUN LIVE PIPELINE REPLAY";
+        }
+
+        // Auto-refresh data every 5 seconds
+        setInterval(fetchData, 5000);
+        
+        // Initial fetch
+        fetchData();
+    </script>
+</body>
+</html>
