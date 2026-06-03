@@ -170,6 +170,20 @@ def get_store_anomalies(id: str):
     res = detect_store_anomalies(id)
     return res
 
+@app.post("/stores/{id}/reset")
+def reset_store_data(id: str):
+    from app.database import get_db_connection
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    try:
+        cursor.execute("DELETE FROM events WHERE store_id = ?", (id,))
+        conn.commit()
+    except Exception as e:
+        conn.close()
+        raise HTTPException(status_code=500, detail=str(e))
+    conn.close()
+    return {"status": "success", "message": f"All event data for store {id} has been reset."}
+
 @app.get("/health", response_model=HealthStatusResponse)
 def get_health():
     res = calculate_service_health()

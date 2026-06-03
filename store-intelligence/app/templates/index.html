@@ -666,7 +666,7 @@
             .logo-area {
                 justify-content: center;
             }
-            #btn-replay-header {
+            #btn-replay-header, #btn-reset-header {
                 display: none;
             }
             .header-controls {
@@ -799,6 +799,9 @@
         <div class="header-controls">
             <button class="store-btn" id="btn-replay-header" onclick="triggerSimulatedReplay()" style="background: linear-gradient(135deg, var(--neon-purple) 0%, var(--neon-pink) 100%); color: #fff; border: none; font-weight: bold; box-shadow: 0 0 10px rgba(187, 102, 255, 0.3);">
                 🚀 RUN REPLAY
+            </button>
+            <button class="store-btn" id="btn-reset-header" onclick="resetStoreData()" style="background: rgba(255, 77, 240, 0.1); color: var(--neon-pink); border: 1px solid rgba(255, 77, 240, 0.3); font-weight: bold; cursor: pointer;">
+                🧹 RESET DATA
             </button>
             <div class="feed-status">
                 <div class="status-dot" id="status-dot"></div>
@@ -1183,6 +1186,33 @@
             }
         }
 
+        async function resetStoreData() {
+            if (isReplayRunning) return;
+            const logBox = document.getElementById('status-log');
+            if (logBox) {
+                logBox.innerText = `[System] Resetting database events for ${currentStoreId}...`;
+            }
+            try {
+                const res = await fetch(`/stores/${currentStoreId}/reset`, {
+                    method: 'POST'
+                });
+                if (res.ok) {
+                    if (logBox) {
+                        logBox.innerText += `\n[System] Store data reset successfully.`;
+                    }
+                    await fetchData();
+                } else {
+                    if (logBox) {
+                        logBox.innerText += `\n[Error] Reset failed.`;
+                    }
+                }
+            } catch (e) {
+                if (logBox) {
+                    logBox.innerText += `\n[Error] Connection error: ${e.message}`;
+                }
+            }
+        }
+
         // Trigger simulated live feed events pushing
         async function triggerSimulatedReplay() {
             if (isReplayRunning) return;
@@ -1190,6 +1220,7 @@
             
             const btn = document.getElementById('btn-replay');
             const btnHeader = document.getElementById('btn-replay-header');
+            const btnReset = document.getElementById('btn-reset-header');
             
             if (btn) {
                 btn.classList.add('running');
@@ -1199,6 +1230,10 @@
                 btnHeader.classList.add('running');
                 btnHeader.innerText = "⏳ REPLAY RUNNING...";
                 btnHeader.style.opacity = "0.6";
+            }
+            if (btnReset) {
+                btnReset.style.opacity = "0.4";
+                btnReset.style.cursor = "not-allowed";
             }
             
             const logBox = document.getElementById('status-log');
@@ -1293,6 +1328,10 @@
                 btnHeader.classList.remove('running');
                 btnHeader.innerText = "🚀 RUN REPLAY";
                 btnHeader.style.opacity = "1";
+            }
+            if (btnReset) {
+                btnReset.style.opacity = "1";
+                btnReset.style.cursor = "pointer";
             }
         }
 
