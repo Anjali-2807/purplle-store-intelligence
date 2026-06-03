@@ -564,6 +564,9 @@
         @media (max-width: 768px) {
             body {
                 padding: 12px;
+                overflow-x: hidden;
+                width: 100%;
+                max-width: 100vw;
             }
             header {
                 flex-direction: column;
@@ -571,6 +574,9 @@
                 align-items: stretch;
                 text-align: center;
                 margin-bottom: 16px;
+                width: 100%;
+                min-width: 0;
+                overflow: hidden;
             }
             .logo-area {
                 justify-content: center;
@@ -590,6 +596,9 @@
                 grid-template-columns: repeat(2, 1fr);
                 gap: 12px;
                 margin-bottom: 16px;
+                width: 100%;
+                min-width: 0;
+                overflow: hidden;
             }
             .metric-card {
                 padding: 16px;
@@ -606,13 +615,20 @@
                 grid-template-columns: 1fr;
                 gap: 16px;
                 margin-bottom: 16px;
+                width: 100%;
+                min-width: 0;
+                overflow: hidden;
             }
             .layout-card {
                 height: auto;
                 min-height: 480px;
+                width: 100%;
+                min-width: 0;
+                overflow: hidden;
             }
             .layout-scroll-wrapper {
                 width: 100%;
+                min-width: 0;
                 overflow-x: auto;
                 -webkit-overflow-scrolling: touch;
                 padding-bottom: 10px;
@@ -626,6 +642,9 @@
             .funnel-card {
                 height: auto;
                 padding: 20px 16px;
+                width: 100%;
+                min-width: 0;
+                overflow: hidden;
             }
             .funnel-container {
                 gap: 20px;
@@ -633,6 +652,7 @@
             }
             .funnel-bar-container {
                 margin-bottom: 12px;
+                width: 100%;
             }
             .funnel-label {
                 width: 80px;
@@ -645,6 +665,14 @@
             .bottom-grid {
                 grid-template-columns: 1fr;
                 gap: 16px;
+                width: 100%;
+                min-width: 0;
+                overflow: hidden;
+            }
+            .anomalies-card, .controls-card {
+                width: 100%;
+                min-width: 0;
+                overflow: hidden;
             }
         }
 
