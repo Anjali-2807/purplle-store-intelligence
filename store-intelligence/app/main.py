@@ -120,6 +120,19 @@ async def structured_logging_middleware(request: Request, call_next):
 async def global_exception_handler(request: Request, exc: Exception):
     trace_id = getattr(request.state, "trace_id", "unknown")
     logger.error(f"Global exception caught. Trace ID: {trace_id}. Error: {str(exc)}")
+    
+    # Catch SQLite connection or database operational errors to return 503 Service Unavailable
+    import sqlite3
+    if isinstance(exc, (sqlite3.OperationalError, sqlite3.DatabaseError)):
+        return JSONResponse(
+            status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+            content={
+                "error": "Service Unavailable",
+                "message": "The analytics database is currently unavailable. Please try again later.",
+                "trace_id": trace_id
+            }
+        )
+        
     return JSONResponse(
         status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
         content={
