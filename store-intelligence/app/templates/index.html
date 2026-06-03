@@ -1122,41 +1122,41 @@
             // Build sample event list tracking customer sessions in the store
             const sampleEvents = [
                 // Session 1 (Customer A: VIS_a81f3)
-                { "event_id": "e001", "store_id": currentStoreId, "camera_id": "CAM_3", "visitor_id": "VIS_a81f3", "event_type": "ENTRY", "timestamp": "2026-04-10T20:10:00Z", "dwell_ms": 0, "is_staff": false, "confidence": 0.98 },
-                { "event_id": "e002", "store_id": currentStoreId, "camera_id": "CAM_1", "visitor_id": "VIS_a81f3", "event_type": "ZONE_ENTER", "timestamp": "2026-04-10T20:10:10Z", "zone_id": "Foxtale", "dwell_ms": 0, "is_staff": false, "confidence": 0.94 },
-                { "event_id": "e003", "store_id": currentStoreId, "camera_id": "CAM_1", "visitor_id": "VIS_a81f3", "event_type": "ZONE_DWELL", "timestamp": "2026-04-10T20:10:40Z", "zone_id": "Foxtale", "dwell_ms": 30000, "is_staff": false, "confidence": 0.92 },
+                { "event_id": "e001", "store_id": currentStoreId, "camera_id": "CAM_3", "visitor_id": "VIS_a81f3", "event_type": "ENTRY", "timestamp": "2026-04-10T20:23:00Z", "dwell_ms": 0, "is_staff": false, "confidence": 0.98 },
+                { "event_id": "e002", "store_id": currentStoreId, "camera_id": "CAM_1", "visitor_id": "VIS_a81f3", "event_type": "ZONE_ENTER", "timestamp": "2026-04-10T20:23:10Z", "zone_id": "Foxtale", "dwell_ms": 0, "is_staff": false, "confidence": 0.94 },
+                { "event_id": "e003", "store_id": currentStoreId, "camera_id": "CAM_1", "visitor_id": "VIS_a81f3", "event_type": "ZONE_DWELL", "timestamp": "2026-04-10T20:23:40Z", "zone_id": "Foxtale", "dwell_ms": 30000, "is_staff": false, "confidence": 0.92 },
                 
                 // Session 2 (Customer B: VIS_b34c2) - Group Entry with Customer A
-                { "event_id": "e004", "store_id": currentStoreId, "camera_id": "CAM_3", "visitor_id": "VIS_b34c2", "event_type": "ENTRY", "timestamp": "2026-04-10T20:10:02Z", "dwell_ms": 0, "is_staff": false, "confidence": 0.95 },
-                { "event_id": "e005", "store_id": currentStoreId, "camera_id": "CAM_2", "visitor_id": "VIS_b34c2", "event_type": "ZONE_ENTER", "timestamp": "2026-04-10T20:10:20Z", "zone_id": "Mars+ Nybae", "dwell_ms": 0, "is_staff": false, "confidence": 0.91 },
+                { "event_id": "e004", "store_id": currentStoreId, "camera_id": "CAM_3", "visitor_id": "VIS_b34c2", "event_type": "ENTRY", "timestamp": "2026-04-10T20:23:02Z", "dwell_ms": 0, "is_staff": false, "confidence": 0.95 },
+                { "event_id": "e005", "store_id": currentStoreId, "camera_id": "CAM_2", "visitor_id": "VIS_b34c2", "event_type": "ZONE_ENTER", "timestamp": "2026-04-10T20:23:20Z", "zone_id": "Mars+ Nybae", "dwell_ms": 0, "is_staff": false, "confidence": 0.91 },
                 
                 // Staff Movement (CL2063: is_staff=true)
-                { "event_id": "e006", "store_id": currentStoreId, "camera_id": "CAM_1", "visitor_id": "STAFF_CL2063", "event_type": "ZONE_ENTER", "timestamp": "2026-04-10T20:10:30Z", "zone_id": "JC", "dwell_ms": 0, "is_staff": true, "confidence": 0.99 },
+                { "event_id": "e006", "store_id": currentStoreId, "camera_id": "CAM_1", "visitor_id": "STAFF_CL2063", "event_type": "ZONE_ENTER", "timestamp": "2026-04-10T20:23:30Z", "zone_id": "JC", "dwell_ms": 0, "is_staff": true, "confidence": 0.99 },
                 
                 // Session 1 goes to Cash Counter
-                { "event_id": "e007", "store_id": currentStoreId, "camera_id": "CAM_5", "visitor_id": "VIS_a81f3", "event_type": "ZONE_ENTER", "timestamp": "2026-04-10T20:11:00Z", "zone_id": "CASH COUNTER", "dwell_ms": 0, "is_staff": false, "confidence": 0.96 },
-                { "event_id": "e008", "store_id": currentStoreId, "camera_id": "CAM_5", "visitor_id": "VIS_a81f3", "event_type": "BILLING_QUEUE_JOIN", "timestamp": "2026-04-10T20:11:05Z", "zone_id": "CASH COUNTER", "dwell_ms": 0, "is_staff": false, "confidence": 0.95, "metadata": { "queue_depth": 1 } },
+                { "event_id": "e007", "store_id": currentStoreId, "camera_id": "CAM_5", "visitor_id": "VIS_a81f3", "event_type": "ZONE_ENTER", "timestamp": "2026-04-10T20:24:00Z", "zone_id": "CASH COUNTER", "dwell_ms": 0, "is_staff": false, "confidence": 0.96 },
+                { "event_id": "e008", "store_id": currentStoreId, "camera_id": "CAM_5", "visitor_id": "VIS_a81f3", "event_type": "BILLING_QUEUE_JOIN", "timestamp": "2026-04-10T20:24:05Z", "zone_id": "CASH COUNTER", "dwell_ms": 0, "is_staff": false, "confidence": 0.95, "metadata": { "queue_depth": 1 } },
                 
-                // POS transaction in CSV is mapped to 2026-04-10T20:11:15Z to trigger conversion
+                // POS transaction in CSV is mapped to 2026-04-10T20:25:04Z to trigger conversion
                 // (Our API seeds 101 transactions. During replay, we'll post this batch of events, 
                 // and since there are transactions near this window, VIS_a81f3 will converted!)
                 
                 // Session 2 goes to Alps Goodness
-                { "event_id": "e009", "store_id": currentStoreId, "camera_id": "CAM_2", "visitor_id": "VIS_b34c2", "event_type": "ZONE_ENTER", "timestamp": "2026-04-10T20:11:10Z", "zone_id": "Alps Goodness", "dwell_ms": 0, "is_staff": false, "confidence": 0.93 },
-                { "event_id": "e010", "store_id": currentStoreId, "camera_id": "CAM_2", "visitor_id": "VIS_b34c2", "event_type": "ZONE_DWELL", "timestamp": "2026-04-10T20:11:40Z", "zone_id": "Alps Goodness", "dwell_ms": 30000, "is_staff": false, "confidence": 0.90 },
+                { "event_id": "e009", "store_id": currentStoreId, "camera_id": "CAM_2", "visitor_id": "VIS_b34c2", "event_type": "ZONE_ENTER", "timestamp": "2026-04-10T20:24:10Z", "zone_id": "Alps Goodness", "dwell_ms": 0, "is_staff": false, "confidence": 0.93 },
+                { "event_id": "e010", "store_id": currentStoreId, "camera_id": "CAM_2", "visitor_id": "VIS_b34c2", "event_type": "ZONE_DWELL", "timestamp": "2026-04-10T20:24:40Z", "zone_id": "Alps Goodness", "dwell_ms": 30000, "is_staff": false, "confidence": 0.90 },
                 
                 // Session 1 Exits after purchase
-                { "event_id": "e011", "store_id": currentStoreId, "camera_id": "CAM_3", "visitor_id": "VIS_a81f3", "event_type": "EXIT", "timestamp": "2026-04-10T20:11:55Z", "dwell_ms": 115000, "is_staff": false, "confidence": 0.98 },
+                { "event_id": "e011", "store_id": currentStoreId, "camera_id": "CAM_3", "visitor_id": "VIS_a81f3", "event_type": "EXIT", "timestamp": "2026-04-10T20:24:55Z", "dwell_ms": 115000, "is_staff": false, "confidence": 0.98 },
                 
                 // Session 3 (Customer C: VIS_c90d4) - Re-entry visitor who steps out and returns
-                { "event_id": "e012", "store_id": currentStoreId, "camera_id": "CAM_3", "visitor_id": "VIS_c90d4", "event_type": "ENTRY", "timestamp": "2026-04-10T20:05:00Z", "dwell_ms": 0, "is_staff": false, "confidence": 0.97 },
-                { "event_id": "e013", "store_id": currentStoreId, "camera_id": "CAM_3", "visitor_id": "VIS_c90d4", "event_type": "EXIT", "timestamp": "2026-04-10T20:07:00Z", "dwell_ms": 120000, "is_staff": false, "confidence": 0.97 },
-                { "event_id": "e014", "store_id": currentStoreId, "camera_id": "CAM_3", "visitor_id": "VIS_c90d4", "event_type": "REENTRY", "timestamp": "2026-04-10T20:11:15Z", "dwell_ms": 0, "is_staff": false, "confidence": 0.95 },
+                { "event_id": "e012", "store_id": currentStoreId, "camera_id": "CAM_3", "visitor_id": "VIS_c90d4", "event_type": "ENTRY", "timestamp": "2026-04-10T20:18:00Z", "dwell_ms": 0, "is_staff": false, "confidence": 0.97 },
+                { "event_id": "e013", "store_id": currentStoreId, "camera_id": "CAM_3", "visitor_id": "VIS_c90d4", "event_type": "EXIT", "timestamp": "2026-04-10T20:20:00Z", "dwell_ms": 120000, "is_staff": false, "confidence": 0.97 },
+                { "event_id": "e014", "store_id": currentStoreId, "camera_id": "CAM_3", "visitor_id": "VIS_c90d4", "event_type": "REENTRY", "timestamp": "2026-04-10T20:24:15Z", "dwell_ms": 0, "is_staff": false, "confidence": 0.95 },
                 
                 // Session 4 (Customer D: VIS_d77f9) - Joins queue and Abandons
-                { "event_id": "e015", "store_id": currentStoreId, "camera_id": "CAM_3", "visitor_id": "VIS_d77f9", "event_type": "ENTRY", "timestamp": "2026-04-10T20:11:00Z", "dwell_ms": 0, "is_staff": false, "confidence": 0.96 },
-                { "event_id": "e016", "store_id": currentStoreId, "camera_id": "CAM_5", "visitor_id": "VIS_d77f9", "event_type": "BILLING_QUEUE_JOIN", "timestamp": "2026-04-10T20:11:20Z", "zone_id": "CASH COUNTER", "dwell_ms": 0, "is_staff": false, "confidence": 0.94, "metadata": { "queue_depth": 2 } },
-                { "event_id": "e017", "store_id": currentStoreId, "camera_id": "CAM_5", "visitor_id": "VIS_d77f9", "event_type": "BILLING_QUEUE_ABANDON", "timestamp": "2026-04-10T20:11:45Z", "zone_id": "CASH COUNTER", "dwell_ms": 25000, "is_staff": false, "confidence": 0.92 }
+                { "event_id": "e015", "store_id": currentStoreId, "camera_id": "CAM_3", "visitor_id": "VIS_d77f9", "event_type": "ENTRY", "timestamp": "2026-04-10T20:24:00Z", "dwell_ms": 0, "is_staff": false, "confidence": 0.96 },
+                { "event_id": "e016", "store_id": currentStoreId, "camera_id": "CAM_5", "visitor_id": "VIS_d77f9", "event_type": "BILLING_QUEUE_JOIN", "timestamp": "2026-04-10T20:24:20Z", "zone_id": "CASH COUNTER", "dwell_ms": 0, "is_staff": false, "confidence": 0.94, "metadata": { "queue_depth": 2 } },
+                { "event_id": "e017", "store_id": currentStoreId, "camera_id": "CAM_5", "visitor_id": "VIS_d77f9", "event_type": "BILLING_QUEUE_ABANDON", "timestamp": "2026-04-10T20:24:45Z", "zone_id": "CASH COUNTER", "dwell_ms": 25000, "is_staff": false, "confidence": 0.92 }
             ];
 
             // Ingest events in small batches of 3 every 1 second to simulate real-time processing
