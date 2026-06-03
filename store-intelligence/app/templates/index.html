@@ -272,7 +272,7 @@
             padding: 20px;
             display: flex;
             flex-direction: column;
-            height: 520px;
+            height: 430px;
         }
 
         .layout-container {
@@ -324,7 +324,7 @@
             padding: 20px;
             display: flex;
             flex-direction: column;
-            height: 520px;
+            height: 430px;
         }
 
         .funnel-container {
@@ -581,6 +581,9 @@
             .logo-area {
                 justify-content: center;
             }
+            #btn-replay-header {
+                display: none;
+            }
             .header-controls {
                 flex-direction: column;
                 align-items: stretch;
@@ -709,6 +712,9 @@
             </div>
         </div>
         <div class="header-controls">
+            <button class="store-btn" id="btn-replay-header" onclick="triggerSimulatedReplay()" style="background: linear-gradient(135deg, var(--neon-purple) 0%, var(--neon-pink) 100%); color: #fff; border: none; font-weight: bold; box-shadow: 0 0 10px rgba(187, 102, 255, 0.3);">
+                🚀 RUN REPLAY
+            </button>
             <div class="feed-status">
                 <div class="status-dot" id="status-dot"></div>
                 <span id="status-text">LIVE REPLAY CONNECTED</span>
@@ -1098,8 +1104,17 @@
             isReplayRunning = true;
             
             const btn = document.getElementById('btn-replay');
-            btn.classList.add('running');
-            btn.innerText = "⏳ REPLAY RUNNING (SIMULATING CCTV EVENTS)...";
+            const btnHeader = document.getElementById('btn-replay-header');
+            
+            if (btn) {
+                btn.classList.add('running');
+                btn.innerText = "⏳ REPLAY RUNNING (SIMULATING CCTV EVENTS)...";
+            }
+            if (btnHeader) {
+                btnHeader.classList.add('running');
+                btnHeader.innerText = "⏳ REPLAY RUNNING...";
+                btnHeader.style.opacity = "0.6";
+            }
             
             const logBox = document.getElementById('status-log');
             logBox.innerText = "[System] Initializing camera streams (CAM 1 to CAM 5)...";
@@ -1173,8 +1188,16 @@
             logBox.innerText += "\n[System] Live Event Replay complete. Pipeline in optimal state.";
             logBox.scrollTop = logBox.scrollHeight;
             isReplayRunning = false;
-            btn.classList.remove('running');
-            btn.innerText = "🚀 RUN LIVE PIPELINE REPLAY";
+            
+            if (btn) {
+                btn.classList.remove('running');
+                btn.innerText = "🚀 RUN LIVE PIPELINE REPLAY";
+            }
+            if (btnHeader) {
+                btnHeader.classList.remove('running');
+                btnHeader.innerText = "🚀 RUN REPLAY";
+                btnHeader.style.opacity = "1";
+            }
         }
 
         // Auto-refresh data every 5 seconds
