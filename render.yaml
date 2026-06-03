@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: purplle-store-intelligence
+    runtime: docker
+    dockerContext: ./store-intelligence
+    dockerfilePath: ./store-intelligence/Dockerfile
+    plan: free
+    envVars:
+      - key: PORT
+        value: 8000

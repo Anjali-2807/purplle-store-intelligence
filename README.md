@@ -1,5 +1,7 @@
 # Apex Retail Store Intelligence Platform
 
+[![Deploy to Render](https://render.com/images/deploy-to-render.svg)](https://render.com/deploy?repo=https://github.com/Anjali-2807/purplle-store-intelligence)
+
 This repository contains the end-to-end Store Intelligence Platform built for Apex Retail's physical stores, combining a Computer Vision detection pipeline, a robust FastAPI REST API, SQLite storage, and a stunning live glassmorphic web dashboard.
 
 ---
