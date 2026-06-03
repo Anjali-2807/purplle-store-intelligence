@@ -32,7 +32,5 @@ COPY . /app
 # Ensure correct PYTHONPATH
 ENV PYTHONPATH=/app/store-intelligence
 
-EXPOSE 8000
-
-# Run uvicorn server on port 8000
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Run uvicorn server on the port specified by environment
+CMD uvicorn app.main:app --host 0.0.0.0 --port $PORT
