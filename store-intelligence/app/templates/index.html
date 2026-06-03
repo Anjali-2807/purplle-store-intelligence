@@ -559,6 +559,115 @@
         ::-webkit-scrollbar-thumb:hover {
             background: rgba(255,255,255,0.2);
         }
+
+        /* Mobile Responsive Enhancements */
+        @media (max-width: 768px) {
+            body {
+                padding: 12px;
+            }
+            header {
+                flex-direction: column;
+                gap: 16px;
+                align-items: stretch;
+                text-align: center;
+                margin-bottom: 16px;
+            }
+            .logo-area {
+                justify-content: center;
+            }
+            .header-controls {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 12px;
+            }
+            .feed-status {
+                justify-content: center;
+            }
+            .store-selector {
+                justify-content: center;
+            }
+            .metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+                margin-bottom: 16px;
+            }
+            .metric-card {
+                padding: 16px;
+            }
+            .metric-value {
+                font-size: 24px;
+            }
+            .metric-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 18px;
+            }
+            .workspace-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                margin-bottom: 16px;
+            }
+            .layout-card {
+                height: auto;
+                min-height: 480px;
+            }
+            .layout-scroll-wrapper {
+                width: 100%;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                padding-bottom: 10px;
+                border-radius: 12px;
+                background: rgba(0, 0, 0, 0.1);
+            }
+            .layout-container {
+                min-width: 720px; /* Keep store map wide enough to read on small screens */
+                height: 360px;
+            }
+            .funnel-card {
+                height: auto;
+                padding: 20px 16px;
+            }
+            .funnel-container {
+                gap: 20px;
+                padding: 15px 0;
+            }
+            .funnel-bar-container {
+                margin-bottom: 12px;
+            }
+            .funnel-label {
+                width: 80px;
+                font-size: 12px;
+            }
+            .funnel-dropoff-tag {
+                left: 80px;
+                bottom: -20px;
+            }
+            .bottom-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+            .logo-title h1 {
+                font-size: 20px;
+            }
+            .funnel-stats {
+                font-size: 10px;
+                right: 8px;
+                gap: 8px;
+            }
+            .funnel-progress-box {
+                height: 30px;
+            }
+            .store-btn {
+                padding: 6px 12px;
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -624,63 +733,65 @@
                     📍 Real-Time Zone Activity Heatmap <span class="badge" id="confidence-badge">High Conf</span>
                 </div>
             </div>
-            <div class="layout-container" id="layout-container">
-                <!-- Fallback background layout illustration using CSS borders and grids -->
-                <div style="width: 100%; height: 100%; position: relative; padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
-                    
-                    <!-- Top shelfs row -->
-                    <div style="display: flex; justify-content: space-between; width: 100%; height: 60px;">
-                        <div style="border: 1px dashed var(--neon-purple); width: 10%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Salm</div>
-                        <div style="border: 1px dashed var(--neon-purple); width: 10%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">The Face Shop</div>
-                        <div style="border: 1px dashed var(--neon-purple); width: 10%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Good Vibes</div>
-                        <div style="border: 1px dashed var(--neon-purple); width: 10%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">DermDoc</div>
-                        <div style="border: 1px dashed var(--neon-purple); width: 10%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Minimalist</div>
-                        <div style="border: 1px dashed var(--neon-purple); width: 10%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Aqualogica</div>
-                        <div style="border: 1px dashed var(--neon-purple); width: 10%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Foxtale</div>
-                        <div style="border: 1px dashed var(--neon-purple); width: 10%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">JC</div>
-                        <div style="border: 1px solid var(--neon-blue); background: rgba(0, 210, 253, 0.05); width: 10%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Accessories</div>
-                    </div>
-                    
-                    <!-- Center gondolas -->
-                    <div style="display: flex; justify-content: space-around; width: 100%; align-items: center; flex-grow: 1; padding: 20px 0;">
-                        <!-- Entrance glass on left -->
-                        <div style="border: 2px solid rgba(255,255,255,0.1); width: 15px; height: 100px; display: flex; align-items: center; justify-content: center; font-size: 9px; font-family: var(--font-mono); transform: rotate(-90deg); margin-left: -10px;">ENTRY</div>
+            <div class="layout-scroll-wrapper">
+                <div class="layout-container" id="layout-container">
+                    <!-- Fallback background layout illustration using CSS borders and grids -->
+                    <div style="width: 100%; height: 100%; position: relative; padding: 20px; display: flex; flex-direction: column; justify-content: space-between;">
                         
-                        <div style="border: 1px dashed var(--neon-pink); width: 15%; height: 80px; padding: 6px; font-size: 10px; text-align: center; display: flex; flex-direction: column; justify-content: center; border-radius: 4px;">
-                            <span>Fragrance</span>
-                            <span style="font-size: 7px; color: var(--text-muted);">Nail Unit</span>
+                        <!-- Top shelfs row -->
+                        <div style="display: flex; justify-content: space-between; width: 100%; height: 60px;">
+                            <div style="border: 1px dashed var(--neon-purple); width: 10%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Salm</div>
+                            <div style="border: 1px dashed var(--neon-purple); width: 10%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">The Face Shop</div>
+                            <div style="border: 1px dashed var(--neon-purple); width: 10%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Good Vibes</div>
+                            <div style="border: 1px dashed var(--neon-purple); width: 10%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">DermDoc</div>
+                            <div style="border: 1px dashed var(--neon-purple); width: 10%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Minimalist</div>
+                            <div style="border: 1px dashed var(--neon-purple); width: 10%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Aqualogica</div>
+                            <div style="border: 1px dashed var(--neon-purple); width: 10%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Foxtale</div>
+                            <div style="border: 1px dashed var(--neon-purple); width: 10%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">JC</div>
+                            <div style="border: 1px solid var(--neon-blue); background: rgba(0, 210, 253, 0.05); width: 10%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Accessories</div>
                         </div>
                         
-                        <div style="font-family: var(--font-mono); font-weight: bold; font-size: 36px; opacity: 0.1; letter-spacing: 5px;">F.O.H</div>
-                        
-                        <div style="border: 1px dashed var(--neon-pink); width: 15%; height: 80px; padding: 6px; font-size: 10px; text-align: center; display: flex; flex-direction: column; justify-content: center; border-radius: 4px;">
-                            <span>Makeup</span>
-                            <span style="font-size: 7px; color: var(--text-muted);">Unit G-1</span>
+                        <!-- Center gondolas -->
+                        <div style="display: flex; justify-content: space-around; width: 100%; align-items: center; flex-grow: 1; padding: 20px 0;">
+                            <!-- Entrance glass on left -->
+                            <div style="border: 2px solid rgba(255,255,255,0.1); width: 15px; height: 100px; display: flex; align-items: center; justify-content: center; font-size: 9px; font-family: var(--font-mono); transform: rotate(-90deg); margin-left: -10px;">ENTRY</div>
+                            
+                            <div style="border: 1px dashed var(--neon-pink); width: 15%; height: 80px; padding: 6px; font-size: 10px; text-align: center; display: flex; flex-direction: column; justify-content: center; border-radius: 4px;">
+                                <span>Fragrance</span>
+                                <span style="font-size: 7px; color: var(--text-muted);">Nail Unit</span>
+                            </div>
+                            
+                            <div style="font-family: var(--font-mono); font-weight: bold; font-size: 36px; opacity: 0.1; letter-spacing: 5px;">F.O.H</div>
+                            
+                            <div style="border: 1px dashed var(--neon-pink); width: 15%; height: 80px; padding: 6px; font-size: 10px; text-align: center; display: flex; flex-direction: column; justify-content: center; border-radius: 4px;">
+                                <span>Makeup</span>
+                                <span style="font-size: 7px; color: var(--text-muted);">Unit G-1</span>
+                            </div>
+                            
+                            <!-- Cash counter on right -->
+                            <div style="border: 2px solid var(--neon-orange); background: rgba(255, 126, 21, 0.05); width: 15%; height: 120px; padding: 6px; font-size: 10px; text-align: center; display: flex; flex-direction: column; justify-content: center; border-radius: 6px; box-shadow: 0 0 10px rgba(255, 126, 21, 0.1);">
+                                <span style="font-weight: bold;">CASH</span>
+                                <span>COUNTER</span>
+                                <span style="font-size: 8px; color: var(--neon-orange); margin-top: 4px;" id="map-queue-label">Q: 0</span>
+                            </div>
                         </div>
                         
-                        <!-- Cash counter on right -->
-                        <div style="border: 2px solid var(--neon-orange); background: rgba(255, 126, 21, 0.05); width: 15%; height: 120px; padding: 6px; font-size: 10px; text-align: center; display: flex; flex-direction: column; justify-content: center; border-radius: 6px; box-shadow: 0 0 10px rgba(255, 126, 21, 0.1);">
-                            <span style="font-weight: bold;">CASH</span>
-                            <span>COUNTER</span>
-                            <span style="font-size: 8px; color: var(--neon-orange); margin-top: 4px;" id="map-queue-label">Q: 0</span>
+                        <!-- Bottom shelfs row -->
+                        <div style="display: flex; justify-content: space-between; width: 100%; height: 60px;">
+                            <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Maybelline</div>
+                            <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Faces Canada</div>
+                            <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Lakme</div>
+                            <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Mars+ Nybae</div>
+                            <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Mens Care</div>
+                            <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Alps Goodness</div>
+                            <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">L'Oreal</div>
+                            <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Beauty Essentials</div>
                         </div>
                     </div>
                     
-                    <!-- Bottom shelfs row -->
-                    <div style="display: flex; justify-content: space-between; width: 100%; height: 60px;">
-                        <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Maybelline</div>
-                        <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Faces Canada</div>
-                        <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Lakme</div>
-                        <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Mars+ Nybae</div>
-                        <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Mens Care</div>
-                        <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Alps Goodness</div>
-                        <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">L'Oreal</div>
-                        <div style="border: 1px dashed var(--neon-purple); width: 11%; padding: 4px; font-size: 8px; text-align: center; border-radius: 4px;">Beauty Essentials</div>
-                    </div>
+                    <!-- Dynamic heat elements will be rendered by JS -->
+                    <div id="dynamic-heats"></div>
                 </div>
-                
-                <!-- Dynamic heat elements will be rendered by JS -->
-                <div id="dynamic-heats"></div>
             </div>
         </div>
 
