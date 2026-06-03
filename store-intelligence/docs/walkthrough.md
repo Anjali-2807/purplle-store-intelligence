@@ -10,7 +10,15 @@ The application has been successfully deployed to Render and is running in the c
 
 ---
 
-## 🛠️ Local Verification & Development
+## 🛠️ Key Production Features Implemented
+1. **Viewport Constraints (PC Layout)**: Designed to fit 100% above the fold on desktop screens (`100vh` height limits, scrollbar-free).
+2. **Dynamic Simulation Replays**: Fully supports switching stores (`STORE_BLR_002` / `ST1008`) and re-running simulations by dynamically mapping unique IDs to bypass database primary key constraints.
+3. **Reset Endpoint**: Integrated a `POST /stores/{id}/reset` API and header button to drop events and reset dashboard states back to 0.
+4. **Graceful DB Degradation**: Maps operational connection failures (like SQLite unavailability) directly to a clean **HTTP 503 Service Unavailable** JSON response, ensuring zero stack-trace leakage.
+
+---
+
+## 💻 Local Verification & Development
 If you need to run the application locally or run the automated test suite, use the following commands:
 
 ### 1. Run local FastAPI dev server
