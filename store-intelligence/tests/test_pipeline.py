@@ -48,11 +48,11 @@ def test_coordinate_zone_mapping():
     assert pipeline.map_coordinates_to_zone("CAM_5", (500, 500)) == "CASH COUNTER"
     
     # Test CAM_1 maps to skincare shelves based on coordinates
-    assert pipeline.map_coordinates_to_zone("CAM_1", (200, 100)) == "The Face Shop"
-    assert pipeline.map_coordinates_to_zone("CAM_1", (800, 100)) == "Good Vibes"
-    assert pipeline.map_coordinates_to_zone("CAM_1", (1500, 100)) == "Minimalist"
+    assert pipeline.map_coordinates_to_zone("CAM_1", (200, 100)) == "Salm"
+    assert pipeline.map_coordinates_to_zone("CAM_1", (800, 100)) == "DermDoc"
+    assert pipeline.map_coordinates_to_zone("CAM_1", (1500, 100)) == "Foxtale"
     
     # Test CAM_2 maps to makeup shelves
     assert pipeline.map_coordinates_to_zone("CAM_2", (200, 100)) == "Maybelline"
-    assert pipeline.map_coordinates_to_zone("CAM_2", (800, 100)) == "Lakme"
-    assert pipeline.map_coordinates_to_zone("CAM_2", (1500, 100)) == "Alps Goodness"
+    assert pipeline.map_coordinates_to_zone("CAM_2", (800, 100)) == "Mars+ Nybae"
+    assert pipeline.map_coordinates_to_zone("CAM_2", (1500, 100)) == "L'Oreal"

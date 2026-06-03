@@ -14,11 +14,18 @@ from pipeline.tracker import MultiCameraTracker
 # Default store layouts
 STORE_ZONES = {
     "STORE_BLR_002": [
-        "EB Korean", "The Face Shop", "Good Vibes", "DermDoc", 
-        "Minimalist", "Aqualogica", "Lakme Skin", "Accessories",
+        "Salm", "The Face Shop", "Good Vibes", "DermDoc", 
+        "Minimalist", "Aqualogica", "Foxtale", "JC", "Accessories",
         "Fragrance", "Nail Unit", "Makeup Unit", "CASH COUNTER",
-        "Maybelline", "Faces Canada", "Lakme", "Colorbar + Sugar",
-        "Swiss Beauty", "Renee NY Bae", "Alps Goodness", "Streax"
+        "Maybelline", "Faces Canada", "Lakme", "Mars+ Nybae",
+        "Mens Care", "Alps Goodness", "L'Oreal", "Beauty Essentials"
+    ],
+    "ST1008": [
+        "Salm", "The Face Shop", "Good Vibes", "DermDoc", 
+        "Minimalist", "Aqualogica", "Foxtale", "JC", "Accessories",
+        "Fragrance", "Nail Unit", "Makeup Unit", "CASH COUNTER",
+        "Maybelline", "Faces Canada", "Lakme", "Mars+ Nybae",
+        "Mens Care", "Alps Goodness", "L'Oreal", "Beauty Essentials"
     ]
 }
 
@@ -86,7 +93,7 @@ class StoreIntelligencePipeline:
                 ret, frame = cap.read()
                 if not ret:
                     break
-                    
+                
                 if frame_idx % 30 == 0:
                     # Frame offset in seconds
                     offset_sec = frame_idx / fps
@@ -98,7 +105,7 @@ class StoreIntelligencePipeline:
                     rects = []
                     for box in results[0].boxes:
                         x1, y1, x2, y2 = box.xyxy[0].cpu().numpy()
-                        rects.append((int(x1), int(startY), int(x2), int(y2)))
+                        rects.append((int(x1), int(y1), int(x2), int(y2)))
                         
                     # Update tracker
                     cam_tracker = self.tracker.get_tracker(camera_id)
@@ -153,13 +160,23 @@ class StoreIntelligencePipeline:
             return "Storage"
         elif camera_id == "CAM_1": # Main Floor Skincare (Top side of map)
             # x is typically 0 to 1920 (1080p). Map to zones
-            if x < 600: return "The Face Shop"
-            elif x < 1200: return "Good Vibes"
-            else: return "Minimalist"
+            if x < 240: return "Salm"
+            elif x < 480: return "The Face Shop"
+            elif x < 720: return "Good Vibes"
+            elif x < 960: return "DermDoc"
+            elif x < 1200: return "Minimalist"
+            elif x < 1440: return "Aqualogica"
+            elif x < 1680: return "Foxtale"
+            else: return "JC"
         elif camera_id == "CAM_2": # Main Floor Makeup (Bottom side of map)
-            if x < 600: return "Maybelline"
-            elif x < 1200: return "Lakme"
-            else: return "Alps Goodness"
+            if x < 240: return "Maybelline"
+            elif x < 480: return "Faces Canada"
+            elif x < 720: return "Lakme"
+            elif x < 960: return "Mars+ Nybae"
+            elif x < 1200: return "Mens Care"
+            elif x < 1440: return "Alps Goodness"
+            elif x < 1680: return "L'Oreal"
+            else: return "Beauty Essentials"
         return None
 
     def run_simulated_pipeline(self):
@@ -185,19 +202,19 @@ class StoreIntelligencePipeline:
                 "zone_id": None, "dwell_ms": 0, "is_staff": False, "confidence": 0.96
             },
             
-            # 2. Customer A walks to Main Floor Skincare (CAM 1) and looks at "The Face Shop" zone at 20:09:45
+            # 2. Customer A walks to Main Floor Skincare (CAM 1) and looks at "Foxtale" zone at 20:09:45
             {
                 "store_id": self.store_id, "camera_id": "CAM_1", "visitor_id": "VIS_c8a2f1", "event_type": "ZONE_ENTER",
                 "timestamp": (base_time + timedelta(seconds=15)).strftime("%Y-%m-%dT%H:%M:%SZ"),
-                "zone_id": "The Face Shop", "dwell_ms": 0, "is_staff": False, "confidence": 0.94,
-                "metadata": { "queue_depth": None, "sku_zone": "MOISTURISER", "session_seq": 2 }
+                "zone_id": "Foxtale", "dwell_ms": 0, "is_staff": False, "confidence": 0.94,
+                "metadata": { "queue_depth": None, "sku_zone": "SERUM", "session_seq": 2 }
             },
             
-            # 3. Customer B walks to Main Floor Makeup (CAM 2) and checks "Maybelline" shelf at 20:09:50
+            # 3. Customer B walks to Main Floor Makeup (CAM 2) and checks "Mars+ Nybae" shelf at 20:09:50
             {
                 "store_id": self.store_id, "camera_id": "CAM_2", "visitor_id": "VIS_f44b39", "event_type": "ZONE_ENTER",
                 "timestamp": (base_time + timedelta(seconds=20)).strftime("%Y-%m-%dT%H:%M:%SZ"),
-                "zone_id": "Maybelline", "dwell_ms": 0, "is_staff": False, "confidence": 0.92,
+                "zone_id": "Mars+ Nybae", "dwell_ms": 0, "is_staff": False, "confidence": 0.92,
                 "metadata": { "queue_depth": None, "sku_zone": "LIPSTICK", "session_seq": 2 }
             },
             
@@ -205,23 +222,23 @@ class StoreIntelligencePipeline:
             {
                 "store_id": self.store_id, "camera_id": "CAM_1", "visitor_id": "STAFF_CL2063", "event_type": "ZONE_ENTER",
                 "timestamp": (base_time + timedelta(seconds=25)).strftime("%Y-%m-%dT%H:%M:%SZ"),
-                "zone_id": "Good Vibes", "dwell_ms": 0, "is_staff": True, "confidence": 0.99,
-                "metadata": { "queue_depth": None, "sku_zone": "SERUM", "session_seq": 1 }
+                "zone_id": "JC", "dwell_ms": 0, "is_staff": True, "confidence": 0.99,
+                "metadata": { "queue_depth": None, "sku_zone": "OIL", "session_seq": 1 }
             },
             
-            # 5. Customer A dwells in "The Face Shop" zone for over 30s
+            # 5. Customer A dwells in "Foxtale" zone for over 30s
             {
                 "store_id": self.store_id, "camera_id": "CAM_1", "visitor_id": "VIS_c8a2f1", "event_type": "ZONE_DWELL",
                 "timestamp": (base_time + timedelta(seconds=45)).strftime("%Y-%m-%dT%H:%M:%SZ"),
-                "zone_id": "The Face Shop", "dwell_ms": 30000, "is_staff": False, "confidence": 0.93,
-                "metadata": { "queue_depth": None, "sku_zone": "MOISTURISER", "session_seq": 3 }
+                "zone_id": "Foxtale", "dwell_ms": 30000, "is_staff": False, "confidence": 0.93,
+                "metadata": { "queue_depth": None, "sku_zone": "SERUM", "session_seq": 3 }
             },
             
-            # 6. Customer B dwells in "Maybelline" zone for over 30s
+            # 6. Customer B dwells in "Mars+ Nybae" zone for over 30s
             {
                 "store_id": self.store_id, "camera_id": "CAM_2", "visitor_id": "VIS_f44b39", "event_type": "ZONE_DWELL",
                 "timestamp": (base_time + timedelta(seconds=50)).strftime("%Y-%m-%dT%H:%M:%SZ"),
-                "zone_id": "Maybelline", "dwell_ms": 30000, "is_staff": False, "confidence": 0.91,
+                "zone_id": "Mars+ Nybae", "dwell_ms": 30000, "is_staff": False, "confidence": 0.91,
                 "metadata": { "queue_depth": None, "sku_zone": "LIPSTICK", "session_seq": 3 }
             },
             

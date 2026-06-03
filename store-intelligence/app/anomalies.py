@@ -54,7 +54,7 @@ def detect_store_anomalies(store_id: str) -> Dict[str, Any]:
     # If we have no zones in the events database, let's use a hardcoded list of standard Purplle zones
     # from the layout map so that the API always returns a non-empty set of zones!
     if not all_zones:
-        all_zones = ["EB Korean", "The Face Shop", "Good Vibes", "DermDoc", "Minimalist", "Aqualogica", "Lakme Skin", "Maybelline", "Faces Canada", "Lakme", "Colorbar + Sugar", "Swiss Beauty", "Renee NY Bae", "Alps Goodness", "Streax"]
+        all_zones = ["Salm", "The Face Shop", "Good Vibes", "DermDoc", "Minimalist", "Aqualogica", "Foxtale", "JC", "Maybelline", "Faces Canada", "Lakme", "Mars+ Nybae", "Mens Care", "Alps Goodness", "L'Oreal", "Beauty Essentials"]
         
     # Find zones with recent events in the last 30 minutes
     # (Since we are replaying historical clips, we can search for the last 30 mins in standard SQLite datetime.
