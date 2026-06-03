@@ -1244,10 +1244,21 @@
                 { "event_id": "e017", "store_id": currentStoreId, "camera_id": "CAM_5", "visitor_id": "VIS_d77f9", "event_type": "BILLING_QUEUE_ABANDON", "timestamp": "2026-04-10T20:24:45Z", "zone_id": "CASH COUNTER", "dwell_ms": 25000, "is_staff": false, "confidence": 0.92 }
             ];
 
+            // Generate unique event and visitor IDs for this run to prevent primary key conflicts in sqlite DB
+            const runId = Math.random().toString(36).substring(2, 7) + "_" + Date.now().toString(36);
+            const eventsToIngest = sampleEvents.map(e => {
+                const newEvent = { ...e };
+                newEvent.event_id = e.event_id + "_" + currentStoreId + "_" + runId;
+                if (!e.is_staff && e.visitor_id) {
+                    newEvent.visitor_id = e.visitor_id + "_" + currentStoreId + "_" + runId;
+                }
+                return newEvent;
+            });
+
             // Ingest events in small batches of 3 every 1 second to simulate real-time processing
             const batchSize = 3;
-            for (let i = 0; i < sampleEvents.length; i += batchSize) {
-                const batch = sampleEvents.slice(i, i + batchSize);
+            for (let i = 0; i < eventsToIngest.length; i += batchSize) {
+                const batch = eventsToIngest.slice(i, i + batchSize);
                 try {
                     const res = await fetch('/events/ingest', {
                         method: 'POST',
