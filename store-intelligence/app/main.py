@@ -46,13 +46,26 @@ def startup_event():
     init_db()
     # Seed default transactions
     csv_file = "/Users/anjalitiwari/Desktop/Purplle Tech Challenge/Brigade_Bangalore_10_April_26 (1)bc6219c.csv"
-    if os.path.exists(csv_file):
-        seed_pos_transactions(csv_file)
-    else:
-        # Check inside docker container path (e.g. /app/Brigade_Bangalore_10_April_26 (1)bc6219c.csv or in workspace)
-        container_csv = "/app/Brigade_Bangalore_10_April_26 (1)bc6219c.csv"
-        if os.path.exists(container_csv):
-            seed_pos_transactions(container_csv)
+    
+    # Try finding the CSV file in multiple possible locations
+    possible_paths = [
+        csv_file,
+        "/app/Brigade_Bangalore_10_April_26 (1)bc6219c.csv",
+        "/app/store-intelligence/Brigade_Bangalore_10_April_26 (1)bc6219c.csv",
+        os.path.join(os.path.dirname(__file__), "..", "Brigade_Bangalore_10_April_26 (1)bc6219c.csv"),
+        os.path.join(os.path.dirname(__file__), "..", "..", "Brigade_Bangalore_10_April_26 (1)bc6219c.csv")
+    ]
+    
+    seeded = False
+    for path in possible_paths:
+        if os.path.exists(path):
+            seed_pos_transactions(path)
+            seeded = True
+            break
+            
+    if not seeded:
+        logger.warning("Could not locate the POS transaction CSV file for seeding database.")
+
 
 # Mounting static files if the directories exist
 static_dir = os.path.join(os.path.dirname(__file__), "static")
