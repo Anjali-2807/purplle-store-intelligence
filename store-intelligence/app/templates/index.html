@@ -560,6 +560,91 @@
             background: rgba(255,255,255,0.2);
         }
 
+        /* Desktop Viewport Constraints - No scrolling on PC */
+        @media (min-width: 769px) {
+            body {
+                height: 100vh;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+                padding: 12px 16px;
+                gap: 10px;
+            }
+
+            header {
+                flex-shrink: 0;
+                margin-bottom: 0 !important;
+            }
+
+            .metrics-grid {
+                flex-shrink: 0;
+                margin-bottom: 0 !important;
+                gap: 12px !important;
+            }
+
+            .workspace-grid {
+                flex: 3 3 0;
+                min-height: 0;
+                margin-bottom: 0 !important;
+                gap: 16px !important;
+            }
+
+            .bottom-grid {
+                flex: 2 2 0;
+                min-height: 0;
+                gap: 16px !important;
+            }
+
+            .workspace-grid > .layout-card,
+            .workspace-grid > .funnel-card,
+            .bottom-grid > .anomalies-card,
+            .bottom-grid > .controls-card {
+                height: 100% !important;
+                min-height: 0 !important;
+            }
+
+            .layout-scroll-wrapper {
+                flex-grow: 1;
+                min-height: 0;
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .layout-container {
+                flex-grow: 1;
+                height: 100%;
+                width: 100%;
+            }
+
+            .controls-content {
+                flex-direction: row !important;
+                align-items: stretch !important;
+                justify-content: space-between !important;
+                height: 100%;
+                gap: 16px !important;
+                text-align: left !important;
+            }
+
+            .controls-content p {
+                display: none !important;
+            }
+
+            .controls-content .btn-action {
+                flex-shrink: 0;
+                align-self: center;
+                white-space: normal;
+                max-width: 200px;
+                padding: 16px 20px;
+            }
+
+            .control-status-log {
+                flex-grow: 1;
+                width: auto !important;
+                height: 100% !important;
+            }
+        }
+
         /* Mobile Responsive Enhancements */
         @media (max-width: 768px) {
             body {
