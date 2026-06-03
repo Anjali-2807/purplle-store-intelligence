@@ -36,7 +36,7 @@ def create_presentation():
             
             # Slide header title
             if title_text:
-                ax.text(0.08, 0.86, title_text, fontsize=24, fontweight='bold', color='#ffffff', family='sans-serif', transform=ax.transAxes)
+                ax.text(0.08, 0.86, title_text, fontsize=24, fontweight='bold', color='#ffffff', family='sans-serif', transform=ax.transAxes, va='top')
                 # Underline
                 ax.plot([0.08, 0.92], [0.81, 0.81], color='#e051b8', transform=ax.transAxes, lw=1.5, alpha=0.7)
                 
@@ -74,7 +74,7 @@ def create_presentation():
         # =========================================================================
         fig, ax = setup_slide("THE OFFLINE RETAIL BLIND SPOT")
         
-        ax.text(0.08, 0.72, "Why Physical Retail Needs Online-Style Analytics:", fontsize=15, color='#a0a0ab', family='sans-serif', transform=ax.transAxes)
+        ax.text(0.08, 0.72, "Why Physical Retail Needs Online-Style Analytics:", fontsize=15, color='#a0a0ab', family='sans-serif', transform=ax.transAxes, va='top')
         
         points = [
             ("Offline Journey Blind Spot", "Physical stores operate with zero path visibility. Customer browsing paths, zone dwell times, and shelf engagements remain completely untracked."),
@@ -83,14 +83,14 @@ def create_presentation():
             ("Heavy Infrastructure Overhead", "Traditional camera analytics require complex database servers and dedicated GPU hardware, blocking fast, edge-based deployment.")
         ]
         
-        y_pos = 0.60
+        y_pos = 0.65
         for head, desc in points:
             # Bullet header
-            ax.text(0.08, y_pos, f"■  {head.upper()}", fontsize=13, fontweight='bold', color='#9b51e0', transform=ax.transAxes, family='sans-serif')
+            ax.text(0.08, y_pos, f"■  {head.upper()}", fontsize=13, fontweight='bold', color='#9b51e0', transform=ax.transAxes, family='sans-serif', va='top')
             # Wrapped description text directly below the header
-            wrapped = "\n".join(textwrap.wrap(desc, width=95))
-            ax.text(0.10, y_pos - 0.05, wrapped, fontsize=10.5, color='#e4e4e7', transform=ax.transAxes, family='sans-serif', linespacing=1.4)
-            y_pos -= 0.14
+            wrapped = "\n".join(textwrap.wrap(desc, width=90))
+            ax.text(0.10, y_pos - 0.035, wrapped, fontsize=10.5, color='#e4e4e7', transform=ax.transAxes, family='sans-serif', linespacing=1.4, va='top')
+            y_pos -= 0.13
             
         pdf.savefig(fig)
         plt.close(fig)
@@ -118,11 +118,11 @@ def create_presentation():
             ax.plot([x_pos + 0.01, x_pos + 0.16], [0.64, 0.64], color='#9b51e0', transform=ax.transAxes, lw=2)
             
             # Title
-            ax.text(x_pos + 0.085, 0.59, title, fontsize=12, fontweight='bold', color='#ffffff', ha='center', family='sans-serif', transform=ax.transAxes)
+            ax.text(x_pos + 0.085, 0.60, title, fontsize=12, fontweight='bold', color='#ffffff', ha='center', family='sans-serif', transform=ax.transAxes, va='top')
             # Header Desc
-            ax.text(x_pos + 0.085, 0.50, header_desc, fontsize=10, color='#e4e4e7', ha='center', va='center', family='sans-serif', linespacing=1.3, transform=ax.transAxes)
+            ax.text(x_pos + 0.085, 0.52, header_desc, fontsize=10, color='#e4e4e7', ha='center', va='top', family='sans-serif', linespacing=1.3, transform=ax.transAxes)
             # Footer Detail
-            ax.text(x_pos + 0.085, 0.40, detail, fontsize=8.5, color='#71717a', ha='center', va='center', family='sans-serif', transform=ax.transAxes)
+            ax.text(x_pos + 0.085, 0.42, detail, fontsize=8.5, color='#71717a', ha='center', va='top', family='sans-serif', transform=ax.transAxes)
             
             # Connecting Arrow (draw clean text-based arrow)
             if i < 3:
@@ -131,8 +131,8 @@ def create_presentation():
             x_pos += 0.22
             
         # Tech summary bar at bottom
-        ax.text(0.08, 0.24, "TECHNOLOGY STACK:", fontsize=12, fontweight='bold', color='#9b51e0', family='sans-serif', transform=ax.transAxes)
-        ax.text(0.24, 0.24, "Python 3.11  •  Ultralytics YOLOv8  •  FastAPI  •  SQLite3  •  HTML5/CSS3", fontsize=12, color='#ffffff', family='sans-serif', transform=ax.transAxes)
+        ax.text(0.08, 0.24, "TECHNOLOGY STACK:", fontsize=12, fontweight='bold', color='#9b51e0', family='sans-serif', transform=ax.transAxes, va='top')
+        ax.text(0.24, 0.24, "Python 3.11  •  Ultralytics YOLOv8  •  FastAPI  •  SQLite3  •  HTML5/CSS3", fontsize=12, color='#ffffff', family='sans-serif', transform=ax.transAxes, va='top')
         
         pdf.savefig(fig)
         plt.close(fig)
@@ -152,12 +152,12 @@ def create_presentation():
         y_pos = 0.68
         for head, desc in tech_points:
             # Checkmark
-            ax.text(0.08, y_pos, "✔", fontsize=14, color='#27ae60', fontweight='bold', transform=ax.transAxes)
+            ax.text(0.08, y_pos, "✔", fontsize=14, color='#27ae60', fontweight='bold', transform=ax.transAxes, va='top')
             # Header
-            ax.text(0.11, y_pos, head, fontsize=13.5, fontweight='bold', color='#ffffff', transform=ax.transAxes, family='sans-serif')
+            ax.text(0.11, y_pos, head, fontsize=13.5, fontweight='bold', color='#ffffff', transform=ax.transAxes, family='sans-serif', va='top')
             # Wrapped description text
-            wrapped = "\n".join(textwrap.wrap(desc, width=95))
-            ax.text(0.11, y_pos - 0.04, wrapped, fontsize=10.5, color='#a0a0ab', transform=ax.transAxes, family='sans-serif', linespacing=1.3)
+            wrapped = "\n".join(textwrap.wrap(desc, width=90))
+            ax.text(0.11, y_pos - 0.035, wrapped, fontsize=10.5, color='#a0a0ab', transform=ax.transAxes, family='sans-serif', linespacing=1.3, va='top')
             y_pos -= 0.155
             
         pdf.savefig(fig)
@@ -169,38 +169,39 @@ def create_presentation():
         fig, ax = setup_slide("PRODUCTION READINESS & USER EXPERIENCE")
         
         # Left column (UI features)
-        ax.text(0.08, 0.70, "LIVE DASHBOARD INTERFACE", fontsize=14, fontweight='bold', color='#9b51e0', family='sans-serif', transform=ax.transAxes)
+        ax.text(0.08, 0.70, "LIVE DASHBOARD INTERFACE", fontsize=14, fontweight='bold', color='#9b51e0', family='sans-serif', transform=ax.transAxes, va='top')
         ui_features = [
             "100% viewport-contained single-page layout (no scrolling)",
             "Dynamic Real-Time zone heatmap overlays (frequency scale 0-100)",
             "Active Conversion Funnel tracking (Entry -> Visit -> Queue -> Purchase)",
             "Live operational logs and active alerts for queues and dead zones"
         ]
-        y_pos = 0.61
+        y_pos = 0.62
         for f in ui_features:
-            ax.text(0.08, y_pos, "•", color='#e051b8', fontsize=18, transform=ax.transAxes)
+            ax.text(0.08, y_pos, "•", color='#e051b8', fontsize=18, transform=ax.transAxes, va='top')
             wrapped = "\n".join(textwrap.wrap(f, width=42))
-            ax.text(0.10, y_pos, wrapped, color='#ffffff', fontsize=11, transform=ax.transAxes, family='sans-serif', linespacing=1.3)
+            ax.text(0.10, y_pos, wrapped, color='#ffffff', fontsize=11, transform=ax.transAxes, family='sans-serif', linespacing=1.3, va='top')
             y_pos -= 0.11
 
         # Right column (Production readiness)
-        ax.text(0.52, 0.70, "PRODUCTION READINESS FEATURES", fontsize=14, fontweight='bold', color='#e051b8', family='sans-serif', transform=ax.transAxes)
+        ax.text(0.52, 0.70, "PRODUCTION READINESS FEATURES", fontsize=14, fontweight='bold', color='#e051b8', family='sans-serif', transform=ax.transAxes, va='top')
         prod_features = [
             "Zero Setup Containerization (runs via 'docker compose up')",
             "Structured JSON logging tracing trace_id, store_id, and latency",
             "Graceful DB degradation mapping failures to HTTP 503 response",
             "High code coverage (>70% statement coverage in test suite)"
         ]
-        y_pos = 0.61
+        y_pos = 0.62
         for f in prod_features:
-            ax.text(0.52, y_pos, "•", color='#9b51e0', fontsize=18, transform=ax.transAxes)
+            ax.text(0.52, y_pos, "•", color='#9b51e0', fontsize=18, transform=ax.transAxes, va='top')
             wrapped = "\n".join(textwrap.wrap(f, width=42))
-            ax.text(0.54, y_pos, wrapped, color='#ffffff', fontsize=11, transform=ax.transAxes, family='sans-serif', linespacing=1.3)
+            ax.text(0.54, y_pos, wrapped, color='#ffffff', fontsize=11, transform=ax.transAxes, family='sans-serif', linespacing=1.3, va='top')
             y_pos -= 0.11
             
-        # Thank you note at bottom
-        ax.text(0.5, 0.15, "Thank you!  Live Demo at: purplle-store-intelligence-xxm1.onrender.com", 
-                fontsize=12, fontweight='bold', color='#27ae60', ha='center', transform=ax.transAxes, family='sans-serif')
+        # Thank you note at bottom with clickable URL link in generated PDF
+        url_str = "https://purplle-store-intelligence-xxm1.onrender.com/dashboard"
+        ax.text(0.5, 0.15, f"Thank you!  Live Demo at: {url_str}", 
+                fontsize=12, fontweight='bold', color='#27ae60', ha='center', transform=ax.transAxes, family='sans-serif', url=url_str)
             
         pdf.savefig(fig)
         plt.close(fig)
