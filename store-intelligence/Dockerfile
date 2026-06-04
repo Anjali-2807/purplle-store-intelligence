@@ -24,7 +24,8 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pypdf \
     opencv-python-headless \
     pytest \
-    pytest-cov
+    pytest-cov \
+    httpx
 
 # Copy the entire workspace into /app
 COPY . /app
