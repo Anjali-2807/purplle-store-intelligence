@@ -1,5 +1,7 @@
 # Apex Retail Store Intelligence Platform
 
+**Live Demo URL:** [https://purplle-store-intelligence-xxm1.onrender.com/dashboard](https://purplle-store-intelligence-xxm1.onrender.com/dashboard)
+
 This repository contains the end-to-end Store Intelligence Platform built for Apex Retail's physical stores, combining a Computer Vision detection pipeline, a robust FastAPI REST API, SQLite storage, and a stunning live glassmorphic web dashboard.
 
 ---
