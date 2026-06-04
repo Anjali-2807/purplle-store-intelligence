@@ -6,7 +6,7 @@ import matplotlib.patches as patches
 
 def create_presentation():
     # Setup PDF Pages backend
-    pdf_path = "/Users/anjalitiwari/Desktop/Purplle Tech Challenge/Apex_Retail_AI_Presentation.pdf"
+    pdf_path = "/Users/anjalitiwari/Desktop/Apex_Retail_AI_Presentation.pdf"
     
     with PdfPages(pdf_path) as pdf:
         # Helper to setup a standard presentation slide axis
