@@ -13,6 +13,7 @@ store-intelligence/app/store_intelligence.db
 .pytest_cache/
 __pycache__/
 *.pyc
+*.jsonl
 
 # OS & VS Code files
 .DS_Store
